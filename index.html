@@ -11,7 +11,7 @@ const N = 15;
 
 let remain = N;
 let text = null;
-const startpos = eg.sphere(0, 1.5, 0, 0.2, "red");
+const startpos = eg.sphere(0, 1.5, -0.3, 0.1, "red");
 let starttime = performance.now();
 
 const list = [];
@@ -21,7 +21,7 @@ for (let i = 0; i < N; i++) {
   const y = Math.random() * .3 + 1;
   //const y = Math.random() * .8 + 1;
   //const y = 1.5;
-  const z = Math.random() * 1 - 1.2;
+  const z = Math.random() * 1.5 - 1.2;
   m.setAttribute("position", { x, y, z });
   list.push(m);
 }
