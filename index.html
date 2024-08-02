@@ -1,0 +1,65 @@
+<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width"><link rel="icon" href="data:">
+<title>AR TAMAGOYAKIMAN</title>
+</head><body>
+<script type="module">
+import * as eg from "https://js.sabae.cc/egvr.js";
+
+const NEAR = 0.2;
+//const NEAR = 1;
+
+const N = 15;
+
+let remain = N;
+let text = null;
+const startpos = eg.sphere(0, 1.5, 0, 0.2, "red");
+let starttime = performance.now();
+
+const list = [];
+for (let i = 0; i < N; i++) {
+  const m = eg.model("./tamagoyaki-1.glb");
+  const x = Math.random() * 1 - 0.5;
+  const y = Math.random() * .3 + 1;
+  //const y = Math.random() * .8 + 1;
+  //const y = 1.5;
+  const z = Math.random() * 1 - 1.2;
+  m.setAttribute("position", { x, y, z });
+  list.push(m);
+}
+
+const init = () => {
+  if (text) {
+    eg.scene.removeChild(text);
+    text = null;
+  }
+  list.forEach(i => i.object3D.visible = true);
+  remain = N;
+  starttime = performance.now();
+};
+
+init();
+
+let t = 0;
+const dt = 1000 / 60;
+setInterval(() => {
+  for (const item of list) {
+    item.setAttribute("rotation", { x: 0, y: t / 20, z: 0 });
+    if (!item.object3D.visible) continue;
+    
+    if (eg.isNear(item, NEAR)) {
+      item.object3D.visible = false;
+      remain--;
+    }
+  }
+  if (!remain && !text) {
+    const time = ((performance.now() - starttime) / 1000).toFixed(1);
+    text = eg.text("CLEAR! TIME:" + time + "sec", 0, 1.5, -1.5);
+  }
+  if (text) {
+    if (eg.isNear(startpos, NEAR)) {
+      init();
+    }
+  }
+  t += dt;
+}, dt);
+</script>
+</body></html>
